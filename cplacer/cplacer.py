@@ -79,7 +79,7 @@ class Core:
   
   def __str__(self):
     n, c, t = self._strtuple();
-    return("c #%02d, name:%s, team:%s, candidate:%s" % (self.id, n, c, t));
+    return("c #%02d, name:%s, team:%s, candidate:%s" % (self.id, n, t, c));
 
 # ---------------------------------------------------------------------------
 class Decision(Core):
@@ -95,7 +95,7 @@ class Decision(Core):
 
   def __str__(self):
     n, c, t = self._strtuple();
-    return("D #%02d, name:%s, team:%s, candidate:%s" % (self.id, n, c, t));
+    return("D #%02d, name:%s, team:%s, candidate:%s" % (self.id, n, t, c));
 
 # ---------------------------------------------------------------------------
 class Requirement(Core):
@@ -120,7 +120,7 @@ class Requirement(Core):
     if (self.priority != None):
       p = str(self.priority);
     
-    return("R #%02d, name:%s, team:%s, candidate:%s, priority:%s" % (self.id, n, c, t, p));
+    return("R #%02d, name:%s, team:%s, candidate:%s, priority:%s" % (self.id, n, t, c, p));
 
 
 # ---------------------------------------------------------------------------
