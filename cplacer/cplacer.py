@@ -3,17 +3,32 @@
 '''
 Candidate placer (cplacer)
 
-Toll for placing candidates according given requirements / decisions to defined teams/positions
+Tool for placing candidates according given requirements / decisions to defined teams/positions
 
-Example of usage:
-  TBD...
-
-  ./cplacer.py -T 'tA~1' -T 'tB~1~Nick"s team nick' -C 'Alice' -C 'Bob' -R 'tA~Alice~1' -R 'tA~Bob~3' -R 'tB~Bob~2' -R 'tB~Alice~1' --save-configuration=a.srl --list-all
-  ./cplacer.py -T 'tA~1' -T 'tB~1~Nick"s team nick' -T 'tC~2' -T 'tD~3' -C 'Alice' -C 'Bob' -C Eve -C Ann -C Frank -R 'tA~Alice~1' -R 'tA~Bob~3' -R 'tB~Bob~2' -R 'tB~Alice~1' -R 'tC~Frank~1' -R 'tC~Bob~2' -R 'tC~Ann~3' -R 'tD~Eve~1' --save-configuration=a.srl --list-all -s
-  ./cplacer.py -T 'tA~1' -T 'tB~1~Nick"s team nick' -T 'tC~2' -T 'tD~3' -C 'Alice' -C 'Bob' -C Eve -C Ann -C Frank -R 'tA~Alice~1' -R 'tA~Bob~3' -R 'tB~Bob~2' -R 'tB~Alice~1' -R 'tC~Frank~1' -R 'tC~Bob~2' -R 'tC~Ann~3' -R 'tD~Eve~1' --save-data=a.srl --list-all -s --solve-cnt 3
+Situation example:
+  We have 5 accepted candidates Alice, Bob, Eve, Ann and Frank.
+  We want to place above candidates to 4 teams tA, tB, tC, tD according following requirements (team wishlists):
+    team tA: Alice (p1), Eve (p2), Bob (p3)
+    team tB: Alice (p1), Bob (p2)
+    team tC: Frank (p1), Bob (p2), Ann (p3)
+    team tD: Eve (p1), Alice (p2), Frank (p3)
   
-  ./cplacer.py -T 'tA~1' -T 'tB~1~Nick"s team nick' -T 'tC~1' -T 'tD~2' -C 'Alice' -C 'Bob' -C Eve -C Ann -C Frank -R 'tA~Alice~1' -R 'tA~Bob~3' -R 'tB~Bob~2' -R 'tB~Alice~1' -R 'tC~Frank~1' -R 'tC~Bob~2' -R 'tC~Ann~3' -R 'tD~Eve~1' -R 'tA~Eve~2' -R 'tD~Alice~2' -R 'tD~Frank~3' -D 'tD~Frank' --save-data=a.srl --list-all -s --solve-cnt 3
+  During the negotiation was decided that Frank has to go to team tD.
   
+  The tool configuration for above situation is:
+    ./cplacer.py
+      # control parameters
+      --save-data=a.srl --list-all -s --solve-cnt 3
+      # candidates
+      -C 'Alice' -C 'Bob' -C 'Eve' -C 'Ann' -C 'Frank'
+      # teams
+      -T 'tA~1' -T 'tB~1~Nick"s team nick' -T 'tC~1' -T 'tD~2'
+      # decisions
+      -D 'tD~Frank'
+      # team's requirements / wishlists
+      -R 'tA~Alice~1' -R 'tA~Bob~3' -R 'tB~Bob~2' -R 'tB~Alice~1' -R 'tC~Ann~3' \
+      -R 'tC~Bob~2' -R 'tD~Eve~1' -R 'tA~Eve~2' -R 'tD~Alice~2' -R 'tD~Frank~3' \
+      -R 'tC~Frank~1'
 '''
 import sys
 import pickle
