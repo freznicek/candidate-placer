@@ -524,13 +524,13 @@ def main(in_opts):
   # save configuration/data
   # -------------------------------------------------------------------------
   if (in_opts['save_data'] != None):
-    fh = open(in_opts['save_data'], 'w')
+    fh = open(in_opts['save_data'], 'w');
     pickle.dump(data, fh);
     fh.close();
   
   # result presentation
   # -------------------------------------------------------------------------
-  if (len(results.keys())>0):
+  if( (isinstance(results, dict)) and (len(results.keys())>0) ):
     print "Solver found best %d result[s] (starting from best one):" % len(results.keys());
     indx=1
     r_keys = results.keys()[:];
@@ -546,7 +546,7 @@ def main(in_opts):
       print "";
       indx += 1;
   else:
-    print "An error occurred, no solution found";
+    print "No solution found/requested";
     
     ###print in_opts;
     ###print data;
