@@ -326,6 +326,8 @@ class Solver(object):
     self.dbc_maxlen = 0;
     if (in_best_option_cnt != None):
       self.dbc_maxlen = in_best_option_cnt;
+    # reduce choices for candidates without decision with single requirement
+    self.reduce_choices_4_single_req_ena = False;
   
   def get_combination_cnt(self):
     self.init();
@@ -344,7 +346,18 @@ class Solver(object):
         int_list.append(i_t.decision.candidate.id);
       else:
         # team might not get anyone
-        int_list.append(None);
+        if( (self.reduce_choices_4_single_req_ena) and \
+            (len(i_t.requirements) == 1) and \
+            (i_t.requirements[0].candidate.decision == None) and \
+            (len(i_t.requirements[0].candidate.requirements) == 1) ):
+          # do not insert None if self.reduce_choices_4_single_req_ena &&
+          #                                team has single requirement &&
+          #                       the candidate has single requirement &&
+          #                                  candidate has no decision
+          pass;
+        else:
+          # otherwise always append None ~ not placed candidated
+          int_list.append(None);
         for i_r in i_t.requirements:
           # browse team's requirements
           int_list.append(i_r.candidate.id);
@@ -508,14 +521,22 @@ def main(in_opts):
     print "Solver part started:"
     solver = Solver(in_data = data, in_best_option_cnt = in_opts['solve_cnt']);
     
+    # reduce choices for single requirement candidate <-> a team
+    if (in_opts['reduce_placements_for_single_requirement'] == True):
+      solver.reduce_choices_4_single_req_ena = True;
+    
     # get number of variations
     loop_cnt = solver.get_combination_cnt();
     print "  %d different placements found" % loop_cnt;
     
     # find the N best choices
     solver.reset(in_data = data, in_best_option_cnt = in_opts['solve_cnt']);
+    # reduce choices for single requirement candidate <-> a team
+    if (in_opts['reduce_placements_for_single_requirement'] == True):
+      solver.reduce_choices_4_single_req_ena = True;
     solver.init();
-    i_loop = 0;
+    
+    i_loop = 0
     i_batch_cnt = get_batch_cnt(loop_cnt);
     while (solver.next()):
       if ((i_loop % i_batch_cnt) == 0):
@@ -612,6 +633,10 @@ if __name__ == "__main__":
                 action="store_true", default=False,
                 help="List all defined data (def: %default)");
   
+  op.add_option("--reduce-placements-for-single-requirement",
+                dest="reduce_placements_for_single_requirement",
+                action="store_true", default=False,
+                help="Reduce placements for candidates with single requirement (def: %default)");
   op.add_option("-s", dest="solve",
                 action="store_true", default=False,
                 help="Find best candidates placement among teams (def: %default)");
