@@ -410,6 +410,15 @@ def find_object(in_list, in_name):
     
   return(int_obj);
 
+def get_batch_cnt(in_total_cnt):
+  ret_val = 1;
+  
+  for i_b in [100000, 10000, 1000, 100, 10]:
+    if( (in_total_cnt / (i_b + 0.0)) > 100.0):
+      ret_val = i_b;
+      break;
+  return(ret_val);
+
 
 # main() definition
 # ---------------------------------------------------------------------------
@@ -506,11 +515,13 @@ def main(in_opts):
     # find the N best choices
     solver.reset(in_data = data, in_best_option_cnt = in_opts['solve_cnt']);
     solver.init();
-    i_loop = 0
+    i_loop = 0;
+    i_batch_cnt = get_batch_cnt(loop_cnt);
     while (solver.next()):
-      print "  %d/%d placement completed\r" % (i_loop+1, loop_cnt),
+      if ((i_loop % i_batch_cnt) == 0):
+        print "  %d/%d placement completed\r" % (i_loop+1, loop_cnt),
       i_loop += 1;
-    print "\n  %d placements evaluated" % i_loop;
+    print "  %d placements evaluated        " % i_loop;
     
     # get results
     results = solver.get_results();
